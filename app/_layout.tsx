@@ -1,5 +1,12 @@
-import { Stack } from "expo-router";
+import { AppProvider } from '@/context/AppContext';
+import { Stack } from 'expo-router';
 
 export default function RootLayout() {
-  return <Stack />;
+  return (
+    <AppProvider>
+      <Stack screenOptions={{ 
+        headerShown: false,
+       }} />
+    </AppProvider>
+  );
 }
