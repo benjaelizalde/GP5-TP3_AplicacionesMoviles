@@ -12,16 +12,19 @@ export default function TabLayout() {
           let iconName = '';
 
           if (route.name === 'index') {
-            iconName = focused ? 'home' : 'home-outline';
+            iconName = focused ? 'receipt' : 'receipt-outline';
           } else if (route.name === 'favorites') {
             iconName = focused ? 'heart' : 'heart-outline';
+          } else if (route.name === 'ingredients') {
+            iconName = focused ? 'restaurant' : 'restaurant-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
     >
-      <Tabs.Screen name="index" options={{ title: 'Principal' }} />
+      <Tabs.Screen name="index" options={{ title: 'Recetas' }} />
+      <Tabs.Screen name="ingredients" options={{ title: 'Mis Ingredientes' }} />
       <Tabs.Screen name="favorites" options={{ title: 'Favoritos' }} />
     </Tabs>
   );

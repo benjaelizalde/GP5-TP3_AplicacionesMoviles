@@ -1,4 +1,5 @@
 import FavoriteButton from '@/components/FavoriteButton';
+import IngredientList from '@/components/IngredientList';
 import { AppContext } from '@/context/AppContext';
 import { useRecipes } from '@/hooks/useRecipes';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
@@ -43,6 +44,17 @@ export default function RecipeDetail() {
 
   if (loading) return <ActivityIndicator style={{ marginTop: 30 }} size="large" />;
   if (!recipeDetail) return <Text style={styles.error}>Receta no encontrada</Text>;
+  
+  const ingredientes = Array.from({ length: 20 })
+    .map((_, i) => {
+      const name = recipeDetail[`strIngredient${i + 1}`];
+      const quantity = recipeDetail[`strMeasure${i + 1}`];
+      if (name && name.trim() !== '') {
+        return { name, quantity };
+      }
+      return null;
+    })
+    .filter(Boolean);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -52,18 +64,7 @@ export default function RecipeDetail() {
         <Text style={styles.subtitle}>Área: {recipeDetail.strAreaES ?? recipeDetail.strArea}</Text>
 
         <Text style={styles.section}>Ingredientes:</Text>
-        {Array.from({ length: 20 }).map((_, i) => {
-          const ingredient = recipeDetail[`strIngredient${i + 1}`];
-          const measure = recipeDetail[`strMeasure${i + 1}`];
-          if (ingredient && ingredient.trim() !== '') {
-            return (
-              <Text key={i} style={styles.ingredient}>
-                • {ingredient} - {measure}
-              </Text>
-            );
-          }
-          return null;
-        })}
+        <IngredientList ingredients={ingredientes} />
 
         <Text style={styles.section}>Instrucciones:</Text>
         <Text style={styles.instructions}>{recipeDetail.strInstructionsES ?? recipeDetail.strInstructions}</Text>
