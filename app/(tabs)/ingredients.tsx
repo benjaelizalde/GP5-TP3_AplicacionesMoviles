@@ -86,7 +86,7 @@ export default function MisIngredientesScreen() {
           </View>
         )}
         ListEmptyComponent={
-          <Text style={[styles.empty, { color: theme.text + '99' }]}>
+          <Text style={[styles.empty, { color: theme.text }]}>
             No hay ingredientes guardados.
           </Text>
         }
