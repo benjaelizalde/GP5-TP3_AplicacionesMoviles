@@ -1,9 +1,17 @@
+import { useTheme } from '@/context/ThemeContext';
 import { Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 export default function RecipeCard({ recipe, onPress }: { recipe: any, onPress: () => void }) {
+  const { theme } = useTheme();
+
   return (
-    <TouchableOpacity onPress={onPress} style={styles.card}>
-      <Text style={styles.title}>{recipe.strMealES ?? recipe.strMeal}</Text>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.card, { backgroundColor: theme.card }]}
+    >
+      <Text style={[styles.title, { color: theme.text }]}>
+        {recipe.strMealES ?? recipe.strMeal}
+      </Text>
       <Image source={{ uri: recipe.strMealThumb }} style={styles.image} />
     </TouchableOpacity>
   );
@@ -11,9 +19,9 @@ export default function RecipeCard({ recipe, onPress }: { recipe: any, onPress: 
 
 const styles = StyleSheet.create({
   card: {
-    marginTop: 16,
+    marginTop: 8,
+    marginBottom: 8,
     marginHorizontal: 16,
-    backgroundColor: '#fff',
     borderRadius: 10,
     overflow: 'hidden',
     elevation: 2,

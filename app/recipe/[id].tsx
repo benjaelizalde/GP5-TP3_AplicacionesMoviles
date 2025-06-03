@@ -1,6 +1,7 @@
 import FavoriteButton from '@/components/FavoriteButton';
 import IngredientList from '@/components/IngredientList';
 import { AppContext } from '@/context/AppContext';
+import { useTheme } from '@/context/ThemeContext';
 import { useRecipes } from '@/hooks/useRecipes';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { useContext, useEffect, useLayoutEffect } from 'react';
@@ -18,7 +19,8 @@ export default function RecipeDetail() {
   const { toggleFavorite, isFavorite, favorites } = useContext(AppContext);
   const { fetchRecipeDetail, recipeDetail, loading } = useRecipes();
   const navigation = useNavigation();
-  
+  const { theme } = useTheme();
+
   useEffect(() => {
     if (id) {
       fetchRecipeDetail(id as string);
@@ -37,13 +39,23 @@ export default function RecipeDetail() {
             onToggle={() => toggleFavorite(recipeDetail)}
           />
         ),
+        headerShown: true,
+      });
+    } else {
+      navigation.setOptions({
+        headerShown: false,
       });
     }
   }, [recipeDetail, favorites]);
 
-
-  if (loading) return <ActivityIndicator style={{ marginTop: 30 }} size="large" />;
-  if (!recipeDetail) return <Text style={styles.error}>Receta no encontrada</Text>;
+  if (loading) {
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: theme.background, flex: 1 }]}>
+        <ActivityIndicator style={{ marginTop: 30 }} size="large" color={theme.text} />
+      </SafeAreaView>
+    );
+  }
+  if (!recipeDetail) return <Text style={[styles.error, { color: theme.text }]}>Receta no encontrada</Text>;
   
   const ingredientes = Array.from({ length: 20 })
     .map((_, i) => {
@@ -57,17 +69,23 @@ export default function RecipeDetail() {
     .filter(Boolean);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 0 }}>
         <Image source={{ uri: recipeDetail.strMealThumb }} style={styles.image} />
-        <Text style={styles.subtitle}>Categoría: {recipeDetail.strCategoryES ?? recipeDetail.strCategory}</Text>
-        <Text style={styles.subtitle}>Área: {recipeDetail.strAreaES ?? recipeDetail.strArea}</Text>
+        <Text style={[styles.subtitle, { color: theme.text }]}>
+          Categoría: {recipeDetail.strCategoryES ?? recipeDetail.strCategory}
+        </Text>
+        <Text style={[styles.subtitle, { color: theme.text }]}>
+          Área: {recipeDetail.strAreaES ?? recipeDetail.strArea}
+        </Text>
 
-        <Text style={styles.section}>Ingredientes:</Text>
+        <Text style={[styles.section, { color: theme.text }]}>Ingredientes:</Text>
         <IngredientList ingredients={ingredientes} />
 
-        <Text style={styles.section}>Instrucciones:</Text>
-        <Text style={styles.instructions}>{recipeDetail.strInstructionsES ?? recipeDetail.strInstructions}</Text>
+        <Text style={[styles.section, { color: theme.text }]}>Instrucciones:</Text>
+        <Text style={[styles.instructions, { color: theme.text }]}>
+          {recipeDetail.strInstructionsES ?? recipeDetail.strInstructions}
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -76,22 +94,17 @@ export default function RecipeDetail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   image: {
     width: '100%',
     height: 250,
     borderRadius: 10,
     marginTop: 16,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginVertical: 12,
+    marginBottom: 16,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    fontWeight: 'bold',
   },
   section: {
     fontSize: 18,
@@ -113,6 +126,5 @@ const styles = StyleSheet.create({
     marginTop: 50,
     textAlign: 'center',
     fontSize: 18,
-    color: 'red',
   },
 });

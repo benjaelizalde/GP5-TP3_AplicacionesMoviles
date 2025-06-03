@@ -1,11 +1,19 @@
+import { useTheme } from '@/context/ThemeContext';
 import { StyleSheet, Text, View } from 'react-native';
 
-const IngredientItem = ({ name, quantity }) => (
-  <View style={styles.container}>
-    <Text style={styles.name}>{name}</Text>
-    {quantity && <Text style={styles.quantity}>{quantity}</Text>}
-  </View>
-);
+const IngredientItem = ({ name, quantity }) => {
+  const { theme, mode } = useTheme();
+
+  const quantityColor = mode === 'dark' ? '#ccc' : '#555';
+  const borderColor = mode === 'dark' ? '#444' : '#ddd';
+
+  return (
+    <View style={[styles.container, { borderColor }]}>
+      <Text style={[styles.name, { color: theme.text }]}>{name}</Text>
+      {quantity && <Text style={[styles.quantity, { color: quantityColor }]}>{quantity}</Text>}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -13,14 +21,12 @@ const styles = StyleSheet.create({
     padding: 8,
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: '#eee',
   },
   name: {
     flex: 1,
     fontSize: 16,
   },
   quantity: {
-    color: '#888',
     fontSize: 14,
   },
 });

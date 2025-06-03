@@ -1,7 +1,8 @@
 import IngredientItem from '@/components/IngredientItem';
+import { useTheme } from '@/context/ThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, FlatList, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 const STORAGE_KEY = 'MIS_INGREDIENTES';
 
@@ -9,6 +10,8 @@ export default function MisIngredientesScreen() {
   const [ingredientes, setIngredientes] = useState<{ name: string; quantity?: string }[]>([]);
   const [nuevoIngrediente, setNuevoIngrediente] = useState('');
   const [cantidad, setCantidad] = useState('');
+  const { theme, mode } = useTheme();
+  const placeholderColor = mode === 'dark' ? '#bbb' : '#888';
 
   useEffect(() => {
     cargarIngredientes();
@@ -47,17 +50,25 @@ export default function MisIngredientesScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.inputRow}>
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            { backgroundColor: theme.card, color: theme.text, borderColor: theme.text + '33' },
+          ]}
           placeholder="Ingrediente"
+          placeholderTextColor={placeholderColor}
           value={nuevoIngrediente}
           onChangeText={setNuevoIngrediente}
         />
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            { backgroundColor: theme.card, color: theme.text, borderColor: theme.text + '33' },
+          ]}
           placeholder="Cantidad (opcional)"
+          placeholderTextColor={placeholderColor}
           value={cantidad}
           onChangeText={setCantidad}
         />
@@ -74,17 +85,20 @@ export default function MisIngredientesScreen() {
             <Button title="Eliminar" color="red" onPress={() => eliminarIngrediente(index)} />
           </View>
         )}
-        ListEmptyComponent={<Text style={styles.empty}>No hay ingredientes guardados.</Text>}
+        ListEmptyComponent={
+          <Text style={[styles.empty, { color: theme.text + '99' }]}>
+            No hay ingredientes guardados.
+          </Text>
+        }
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 16 },
-  inputRow: { flexDirection: 'row', marginBottom: 16, alignItems: 'center' },
-  input: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 6, marginRight: 8, padding: 8 },
-  itemRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  empty: { textAlign: 'center', color: '#888', marginTop: 32 },
+  container: { flex: 1, padding: 16 },
+  inputRow: { flexDirection: 'row', marginTop:16, marginBottom: 16, marginHorizontal:16, alignItems: 'center' },
+  input: { flex: 1, borderWidth: 1, borderRadius: 6, marginRight: 8, padding: 8 },
+  itemRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, marginHorizontal: 16 },
+  empty: { textAlign: 'center', marginTop: 32, fontSize: 16 },
 });
