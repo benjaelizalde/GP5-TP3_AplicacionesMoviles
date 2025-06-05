@@ -1,4 +1,5 @@
 import { supabase } from '@/constants/supabaseClient';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Button, StyleSheet, Text, TextInput, View, useColorScheme } from 'react-native';
@@ -12,11 +13,9 @@ export default function LoginScreen() {
   const [isRegister, setIsRegister] = useState(false);
   const router = useRouter();
 
-  // Detectar tema del dispositivo
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
-  // Colores según tema
   const backgroundColor = isDark ? '#181818' : '#fff';
   const textColor = isDark ? '#fff' : '#181818';
   const inputBg = isDark ? '#222' : '#f5f5f5';
@@ -101,7 +100,18 @@ export default function LoginScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
-      <Text style={[styles.title, { color: textColor }]}>{isRegister ? 'Crear cuenta' : 'Bienvenido'}</Text>
+      {!isRegister && (
+        <View style={{ alignItems: 'center', marginBottom: 24 }}>
+          <Ionicons
+            name="book-outline"
+            size={100}
+            color={isDark ? '#fff' : '#181818'}
+          />
+        </View>
+      )}
+      {isRegister && (
+        <Text style={[styles.title, { color: textColor }]}>Crear cuenta</Text>
+      )}
       {isRegister ? (
         <>
           <TextInput
