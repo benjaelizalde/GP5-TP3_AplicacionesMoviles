@@ -1,34 +1,49 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { createContext, useEffect, useState } from 'react';
+import { supabase } from '@/constants/supabaseClient';
+import { createContext, useEffect, useState } from 'react';
+import { useAuth } from './AuthContext';
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  const { user } = useAuth();
   const [favorites, setFavorites] = useState([]);
 
+  // Cargar favoritos del usuario al iniciar sesión
   useEffect(() => {
     const loadFavorites = async () => {
-      const stored = await AsyncStorage.getItem('FAVORITES');
-      if (stored) setFavorites(JSON.parse(stored));
+      if (user?.id) {
+        const { data } = await supabase
+          .from('favorites')
+          .select('recipe_id, recipe_data')
+          .eq('user_id', user.id);
+        setFavorites(data ? data.map(f => f.recipe_data) : []);
+      } else {
+        setFavorites([]);
+      }
     };
     loadFavorites();
-  }, []);
+  }, [user]);
 
-  useEffect(() => {
-    AsyncStorage.setItem('FAVORITES', JSON.stringify(favorites));
-  }, [favorites]);
-
-  const toggleFavorite = (recipe) => {
-    setFavorites((prevFavorites) => {
-        const exists = prevFavorites.some((r) => r.idMeal === recipe.idMeal);
-        if (exists) {
-        return prevFavorites.filter((r) => r.idMeal !== recipe.idMeal);
-        } else {
-        return [...prevFavorites, recipe];
-        }
-    });
-    };
-
+  // Agregar o quitar favorito en Supabase
+  const toggleFavorite = async (recipe) => {
+    if (!user?.id) return;
+    const exists = favorites.some((r) => r.idMeal === recipe.idMeal);
+    if (exists) {
+      // Quitar de favoritos
+      await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('recipe_id', recipe.idMeal);
+      setFavorites((prev) => prev.filter((r) => r.idMeal !== recipe.idMeal));
+    } else {
+      // Agregar a favoritos
+      await supabase
+        .from('favorites')
+        .insert([{ user_id: user.id, recipe_id: recipe.idMeal, recipe_data: recipe }]);
+      setFavorites((prev) => [...prev, recipe]);
+    }
+  };
 
   const isFavorite = (idMeal) => {
     return favorites.some((r) => r.idMeal === idMeal);
