@@ -1,52 +1,64 @@
 import IngredientItem from '@/components/IngredientItem';
+import { supabase } from '@/constants/supabaseClient';
+import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, FlatList, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
-
-const STORAGE_KEY = 'MIS_INGREDIENTES';
 
 export default function MisIngredientesScreen() {
   const [ingredientes, setIngredientes] = useState<{ name: string; quantity?: string }[]>([]);
   const [nuevoIngrediente, setNuevoIngrediente] = useState('');
   const [cantidad, setCantidad] = useState('');
   const { theme, mode } = useTheme();
+  const { user } = useAuth();
   const placeholderColor = mode === 'dark' ? '#bbb' : '#888';
 
   useEffect(() => {
     cargarIngredientes();
-  }, []);
-
-  useEffect(() => {
-    guardarIngredientes();
-  }, [ingredientes]);
+  }, [user]);
 
   const cargarIngredientes = async () => {
+    if (!user?.id) return setIngredientes([]);
     try {
-      const data = await AsyncStorage.getItem(STORAGE_KEY);
-      if (data) setIngredientes(JSON.parse(data));
+      const { data, error } = await supabase
+        .from('ingredients')
+        .select('name, quantity')
+        .eq('user_id', user.id);
+      if (error) throw error;
+      setIngredientes(data ?? []);
     } catch (e) {
       Alert.alert('Error', 'No se pudieron cargar los ingredientes');
     }
   };
 
-  const guardarIngredientes = async () => {
+  const agregarIngrediente = async () => {
+    if (!nuevoIngrediente.trim() || !user?.id) return;
+    const nuevo = { name: nuevoIngrediente.trim(), quantity: cantidad.trim() };
     try {
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(ingredientes));
+      await supabase
+        .from('ingredients')
+        .upsert({ user_id: user.id, ...nuevo }, { onConflict: 'user_id,name' });
+      await cargarIngredientes();
+      setNuevoIngrediente('');
+      setCantidad('');
     } catch (e) {
-      Alert.alert('Error', 'No se pudieron guardar los ingredientes');
+      Alert.alert('Error', 'No se pudo agregar el ingrediente');
     }
   };
 
-  const agregarIngrediente = () => {
-    if (!nuevoIngrediente.trim()) return;
-    setIngredientes([...ingredientes, { name: nuevoIngrediente.trim(), quantity: cantidad.trim() }]);
-    setNuevoIngrediente('');
-    setCantidad('');
-  };
-
-  const eliminarIngrediente = (index: number) => {
-    setIngredientes(ingredientes.filter((_, i) => i !== index));
+  const eliminarIngrediente = async (index: number) => {
+    if (!user?.id) return;
+    const ing = ingredientes[index];
+    try {
+      await supabase
+        .from('ingredients')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('name', ing.name);
+      await cargarIngredientes();
+    } catch (e) {
+      Alert.alert('Error', 'No se pudo eliminar el ingrediente');
+    }
   };
 
   return (
@@ -93,7 +105,7 @@ export default function MisIngredientesScreen() {
       />
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
