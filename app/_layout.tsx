@@ -1,5 +1,6 @@
 import { supabase } from '@/constants/supabaseClient';
 import { AppProvider } from '@/context/AppContext';
+import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { Stack, usePathname, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -33,10 +34,12 @@ export default function RootLayout() {
   if (loading) return null;
 
   return (
-    <ThemeProvider>
-      <AppProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-      </AppProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <AppProvider>
+          <Stack screenOptions={{ headerShown: false }} />
+        </AppProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }

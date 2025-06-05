@@ -86,7 +86,12 @@ export default function LoginScreen() {
           email: loginEmail,
           password,
         });
-        if (error) throw error;
+        if (error) {
+          if (error.message === 'Invalid login credentials') {
+            throw new Error('La contraseña es incorrecta');
+          }
+          throw error;
+        }
         router.replace('/');
       }
     } catch (e) {
