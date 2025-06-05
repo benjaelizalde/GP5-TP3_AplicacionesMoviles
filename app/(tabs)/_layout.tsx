@@ -19,7 +19,7 @@ export default function TabLayout() {
           if (route.name === 'index') iconName = focused ? 'receipt' : 'receipt-outline';
           else if (route.name === 'favorites') iconName = focused ? 'heart' : 'heart-outline';
           else if (route.name === 'ingredients') iconName = focused ? 'restaurant' : 'restaurant-outline';
-          else if (route.name === 'settings') iconName = focused ? 'settings' : 'settings-outline';
+          else if (route.name === 'settings') iconName = focused ? 'person' : 'person-outline';
           return <Ionicons name={iconName} size={size} color={color} />;
         },
       })}
@@ -27,7 +27,7 @@ export default function TabLayout() {
       <Tabs.Screen name="index" options={{ title: 'Recetas' }} />
       <Tabs.Screen name="ingredients" options={{ title: 'Mis Ingredientes' }} />
       <Tabs.Screen name="favorites" options={{ title: 'Favoritos' }} />
-      <Tabs.Screen name="settings" options={{ title: 'Configuración' }} />
+      <Tabs.Screen name="settings" options={{ title: 'Cuenta' }} />
     </Tabs>
   );
 }
