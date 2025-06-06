@@ -1,50 +1,55 @@
-# Welcome to your Expo app 👋
+# TP3 - Aplicación de Recetas y Gestión de Ingredientes
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Esta es una aplicación móvil desarrollada en React Native con Expo, orientada a la gestión de recetas de cocina y el manejo personalizado de ingredientes y favoritos. Permite a los usuarios buscar recetas, guardar sus favoritas, gestionar su lista de ingredientes y personalizar su cuenta y tema visual.
 
-## Get started
+---
 
-1. Install dependencies
+## Temática
 
+La app está pensada para personas que desean:
+- Buscar recetas de cocina por nombre o ingrediente.
+- Guardar recetas favoritas para acceder rápidamente.
+- Llevar un control de los ingredientes que tienen en casa.
+- Administrar su cuenta y preferencias de tema (claro/oscuro/sistema).
+
+---
+
+## Librerías principales utilizadas
+
+- **Expo**: Framework para desarrollo multiplataforma.
+- **React Native**: Base para el desarrollo móvil.
+- **expo-router**: Navegación basada en archivos.
+- **@supabase/supabase-js**: Backend como servicio para autenticación y base de datos.
+- **@react-navigation/native** y dependencias: Navegación entre pantallas.
+- **@expo/vector-icons**: Iconografía.
+- **axios**: Cliente HTTP para consumir la API de recetas.
+
+---
+
+## Instrucciones para instalar y correr la app
+
+1. **Clona el repositorio**  
+   Descarga o clona este proyecto en tu máquina local.
+
+2. **Instala las dependencias**  
+   Abrí una terminal en la carpeta del proyecto y ejecuta:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. **Inicia la app**  
+   Ejecuta:
    ```bash
    npx expo start
    ```
+   Luego, seguí las instrucciones en pantalla para abrir la app en un emulador Android/iOS o en tu dispositivo físico con Expo Go.
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Notas adicionales
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- La app utiliza Supabase para autenticación y almacenamiento de datos de usuario (ingredientes, favoritos, perfil).
+- El diseño es responsive y soporta modo claro/oscuro.
+- Podes personalizar el tema desde la sección de Cuenta de la app.
+- El icono de la app es un libro, representando la temática de recetas.
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
