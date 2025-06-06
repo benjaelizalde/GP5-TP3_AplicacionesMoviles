@@ -3,7 +3,7 @@ import { supabase } from '@/constants/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, FlatList, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, FlatList, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function MisIngredientesScreen() {
   const [ingredientes, setIngredientes] = useState<{ name: string; quantity?: string }[]>([]);
@@ -69,7 +69,7 @@ export default function MisIngredientesScreen() {
             styles.input,
             { backgroundColor: theme.card, color: theme.text, borderColor: theme.text + '33' },
           ]}
-          placeholder="Ingrediente"
+          placeholder="Ingrediente *"
           placeholderTextColor={placeholderColor}
           value={nuevoIngrediente}
           onChangeText={setNuevoIngrediente}
@@ -79,13 +79,16 @@ export default function MisIngredientesScreen() {
             styles.input,
             { backgroundColor: theme.card, color: theme.text, borderColor: theme.text + '33' },
           ]}
-          placeholder="Cantidad (opcional)"
+          placeholder="Cantidad"
           placeholderTextColor={placeholderColor}
           value={cantidad}
           onChangeText={setCantidad}
         />
-        <Button title="Agregar" onPress={agregarIngrediente} />
+        <TouchableOpacity onPress={agregarIngrediente}>
+          <Text style={{ color: '#007AFF',  fontSize: 16 }}>Agregar</Text>
+        </TouchableOpacity>
       </View>
+
       <FlatList
         data={ingredientes}
         keyExtractor={(_, idx) => idx.toString()}
@@ -94,7 +97,9 @@ export default function MisIngredientesScreen() {
             <View style={{ flex: 1 }}>
               <IngredientItem name={item.name} quantity={item.quantity} />
             </View>
-            <Button title="Eliminar" color="red" onPress={() => eliminarIngrediente(index)} />
+            <TouchableOpacity onPress={() => eliminarIngrediente(index)}>
+              <Text style={{ color: 'red', fontSize: 16 }}>Eliminar</Text>
+            </TouchableOpacity>
           </View>
         )}
         ListEmptyComponent={
