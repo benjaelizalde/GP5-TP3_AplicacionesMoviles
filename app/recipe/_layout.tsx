@@ -6,7 +6,6 @@ export default function RecipeLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
         headerStyle: { backgroundColor: theme.card },
         headerTintColor: theme.text,
       }}

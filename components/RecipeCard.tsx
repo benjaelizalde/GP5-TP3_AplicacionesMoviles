@@ -19,7 +19,7 @@ export default function RecipeCard({ recipe, onPress }: { recipe: any, onPress: 
 
 const styles = StyleSheet.create({
   card: {
-    marginTop: 8,
+    marginTop: 16,
     marginBottom: 8,
     marginHorizontal: 16,
     borderRadius: 8,

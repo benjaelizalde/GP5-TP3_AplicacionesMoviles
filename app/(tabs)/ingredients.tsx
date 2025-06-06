@@ -110,7 +110,7 @@ export default function MisIngredientesScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   inputRow: { flexDirection: 'row', marginTop:16, marginBottom: 16, marginHorizontal:16, alignItems: 'center' },
-  input: { flex: 1, borderWidth: 1, borderRadius: 6, marginRight: 8, padding: 8 },
+  input: { flex: 1, borderWidth: 1, borderRadius: 6, marginRight: 8, padding: 10 },
   itemRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, marginHorizontal: 16 },
   empty: { textAlign: 'center', marginTop: 32, fontSize: 16 },
 });

@@ -8,10 +8,12 @@ import { useContext, useEffect, useLayoutEffect } from 'react';
 import {
   ActivityIndicator,
   Image,
+  Platform,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
-  Text
+  Text,
 } from 'react-native';
 
 export default function RecipeDetail() {
@@ -20,6 +22,13 @@ export default function RecipeDetail() {
   const { fetchRecipeDetail, recipeDetail, loading } = useRecipes();
   const navigation = useNavigation();
   const { theme } = useTheme();
+
+  navigation.setOptions({
+    headerShown: true,
+    headerStyle: {
+      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    },
+  });
 
   useEffect(() => {
     if (id) {
@@ -30,7 +39,7 @@ export default function RecipeDetail() {
   const isFav = recipeDetail ? isFavorite(recipeDetail.idMeal) : false;
 
   useLayoutEffect(() => {
-    if (recipeDetail) {
+    if (recipeDetail){
       navigation.setOptions({
         title: recipeDetail.strMealES ?? recipeDetail.strMeal,
         headerRight: () => (
@@ -39,11 +48,6 @@ export default function RecipeDetail() {
             onToggle={() => toggleFavorite(recipeDetail)}
           />
         ),
-        headerShown: true,
-      });
-    } else {
-      navigation.setOptions({
-        headerShown: false,
       });
     }
   }, [recipeDetail, favorites]);

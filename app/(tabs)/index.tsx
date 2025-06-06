@@ -66,10 +66,10 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
+    padding: 16,
   },
   input: {
-    marginTop: 12,
+    marginTop: 16,
     marginHorizontal: 16,
     padding: 12,
     borderRadius: 8,
