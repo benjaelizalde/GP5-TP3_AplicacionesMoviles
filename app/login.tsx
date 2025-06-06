@@ -2,7 +2,7 @@ import { supabase } from '@/constants/supabaseClient';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Button, StyleSheet, Text, TextInput, View, useColorScheme } from 'react-native';
+import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View, useColorScheme } from 'react-native';
 
 export default function LoginScreen() {
   const [emailOrUsername, setEmailOrUsername] = useState('');
@@ -165,9 +165,58 @@ export default function LoginScreen() {
             value={password}
             onChangeText={setPassword}
           />
+          <Text
+            style={[styles.password, { color: isDark ? '#4fa3ff' : '#007AFF',  }]}
+            onPress={() => {
+              // Aquí puedes abrir un modal, navegar a otra pantalla o mostrar un Alert
+              Alert.alert(
+                'Recuperar contraseña',
+                'Para recuperar tu contraseña, ingresa tu email en el login y presiona este enlace.',
+                [
+                  {
+                    text: 'Enviar email',
+                    onPress: async () => {
+                      if (!emailOrUsername || emailOrUsername.includes('@') === false) {
+                        Alert.alert('Por favor, ingresa tu email en el campo correspondiente.');
+                        return;
+                      }
+                      const { error } = await supabase.auth.resetPasswordForEmail(emailOrUsername);
+                      if (error) {
+                        Alert.alert('Error', error.message);
+                      } else {
+                        Alert.alert('Listo', 'Te enviamos un email para restablecer tu contraseña.');
+                      }
+                    },
+                  },
+                  { text: 'Cancelar', style: 'cancel' },
+                ]
+              );
+            }}
+          >
+            ¿Olvidaste tu contraseña?
+          </Text>
         </>
       )}
-      <Button title={isRegister ? 'Registrarse' : 'Iniciar sesión'} onPress={handleAuth} />
+      <TouchableOpacity
+        onPress={handleAuth}
+        activeOpacity={0.7}
+        style={{
+          paddingVertical: 12,
+          alignItems: 'center',
+          borderColor: textColor,
+          borderWidth: 1,
+          borderRadius: 8,
+          marginBottom: 8,
+          marginTop: 8,
+        }}
+      >
+        <Text style={{
+          color: textColor,
+          fontSize: 16,
+        }}>
+          {isRegister ? 'Registrarse' : 'Iniciar sesión'}
+        </Text>
+      </TouchableOpacity>
       <Text
         style={[styles.link, { color: isDark ? '#4fa3ff' : '#007AFF' }]}
         onPress={() => {
@@ -175,7 +224,7 @@ export default function LoginScreen() {
             clearFields();
         }}
       >
-        {isRegister ? '¿Ya tenes cuenta? Inicia sesión' : '¿No tenes cuenta? Regístrate'}
+        {isRegister ? '¿Ya tenés cuenta? Inicia sesión' : '¿No tenés cuenta? Regístrate'}
       </Text>
     </View>
   );
@@ -185,5 +234,6 @@ const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', padding: 24 },
   title: { fontSize: 22, fontWeight: 'bold', marginBottom: 24, textAlign: 'center' },
   input: { borderWidth: 1, borderRadius: 8, padding: 12, marginBottom: 12 },
+  password:{marginTop: 0, marginBottom: 16, textAlign: 'left'},
   link: { marginTop: 16, textAlign: 'center' },
 });

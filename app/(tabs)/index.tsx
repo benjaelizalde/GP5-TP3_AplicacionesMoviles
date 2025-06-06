@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginHorizontal: 16,
     padding: 12,
-    borderRadius: 10,
+    borderRadius: 8,
     borderWidth: 1,
     fontSize: 16,
   },
