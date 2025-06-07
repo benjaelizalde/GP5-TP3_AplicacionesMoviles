@@ -1,7 +1,7 @@
 import { supabase } from '@/constants/supabaseClient';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View, useColorScheme } from 'react-native';
 
 export default function LoginScreen() {
@@ -22,6 +22,10 @@ export default function LoginScreen() {
   const borderColor = isDark ? '#444' : '#ccc';
   const placeholderColor = isDark ? '#aaa' : '#888';
 
+  const emailInputRef = useRef<TextInput>(null);
+  const passwordInputRef = useRef<TextInput>(null);
+  const repeatPasswordInputRef = useRef<TextInput>(null);
+
   const clearFields = (user = '', pass = '') => {
     setEmailOrUsername(user);
     setUsername('');
@@ -34,6 +38,7 @@ export default function LoginScreen() {
     try {
       if (isRegister) {
         if (!username) throw new Error('El nombre de usuario es obligatorio');
+        if (!email) throw new Error('El email es obligatorio');
         if (password !== repeatPassword) throw new Error('Las contraseñas no coinciden');
         if (password.length < 6) throw new Error('La contraseña debe tener al menos 6 caracteres');
 
@@ -51,6 +56,9 @@ export default function LoginScreen() {
         if (error) {
           if (error.message.includes('User already registered') || error.message.includes('already registered')) {
             throw new Error('El email ya está en uso');
+          }
+          if (error.message.includes('Unable to validate email address: invalid format') || error.message.toLowerCase().includes('invalid email')) {
+            throw new Error('El email ingresado no es válido');
           }
           throw error;
         }
@@ -71,6 +79,7 @@ export default function LoginScreen() {
         ]);
       } else {
         let loginEmail = emailOrUsername;
+        if (!emailOrUsername) throw new Error('El email o nombre de usuario es obligatorio');
         if (!emailOrUsername.includes('@')) {
           // Buscar el email en user_profiles por username
           const { data: profile, error: profileError } = await supabase
@@ -121,6 +130,8 @@ export default function LoginScreen() {
             autoCapitalize="none"
             value={username}
             onChangeText={setUsername}
+            returnKeyType="next"
+            onSubmitEditing={() => emailInputRef.current?.focus()}
           />
           <TextInput
             style={[styles.input, { backgroundColor: inputBg, color: textColor, borderColor }]}
@@ -129,6 +140,9 @@ export default function LoginScreen() {
             autoCapitalize="none"
             value={email}
             onChangeText={setEmail}
+            ref={emailInputRef}
+            returnKeyType="next"
+            onSubmitEditing={() => passwordInputRef.current?.focus()}
           />
           <TextInput
             style={[styles.input, { backgroundColor: inputBg, color: textColor, borderColor }]}
@@ -137,6 +151,9 @@ export default function LoginScreen() {
             secureTextEntry
             value={password}
             onChangeText={setPassword}
+            ref={passwordInputRef}
+            returnKeyType="next"
+            onSubmitEditing={() => repeatPasswordInputRef.current?.focus()}
           />
           <TextInput
             style={[styles.input, { backgroundColor: inputBg, color: textColor, borderColor }]}
@@ -145,6 +162,9 @@ export default function LoginScreen() {
             secureTextEntry
             value={repeatPassword}
             onChangeText={setRepeatPassword}
+            ref={repeatPasswordInputRef}
+            returnKeyType="send"
+            onSubmitEditing={handleAuth}
           />
         </>
       ) : (
@@ -156,6 +176,8 @@ export default function LoginScreen() {
             autoCapitalize="none"
             value={emailOrUsername}
             onChangeText={setEmailOrUsername}
+            returnKeyType="next"
+            onSubmitEditing={() => passwordInputRef.current?.focus()}
           />
           <TextInput
             style={[styles.input, { backgroundColor: inputBg, color: textColor, borderColor }]}
@@ -164,6 +186,9 @@ export default function LoginScreen() {
             secureTextEntry
             value={password}
             onChangeText={setPassword}
+            ref={passwordInputRef}
+            returnKeyType="done"
+            onSubmitEditing={handleAuth}
           />
           <Text
             style={[styles.password, { color: isDark ? '#4fa3ff' : '#007AFF',  }]}

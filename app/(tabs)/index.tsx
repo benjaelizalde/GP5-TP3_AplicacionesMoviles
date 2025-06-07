@@ -34,6 +34,7 @@ export default function HomeScreen() {
         value={query}
         onChangeText={setQuery}
         onSubmitEditing={handleSearch}
+        returnKeyType='search'
         style={[
           styles.input,
           { backgroundColor: theme.card, color: theme.text, borderColor: theme.text + '33' },

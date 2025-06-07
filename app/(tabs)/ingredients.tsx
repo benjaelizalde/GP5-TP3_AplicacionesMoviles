@@ -2,7 +2,7 @@ import IngredientItem from '@/components/IngredientItem';
 import { supabase } from '@/constants/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, FlatList, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function MisIngredientesScreen() {
@@ -12,6 +12,7 @@ export default function MisIngredientesScreen() {
   const { theme, mode } = useTheme();
   const { user } = useAuth();
   const placeholderColor = mode === 'dark' ? '#bbb' : '#888';
+  const cantidadInputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     cargarIngredientes();
@@ -73,6 +74,8 @@ export default function MisIngredientesScreen() {
           placeholderTextColor={placeholderColor}
           value={nuevoIngrediente}
           onChangeText={setNuevoIngrediente}
+          onSubmitEditing={() => cantidadInputRef.current?.focus()}
+          returnKeyType="next"
         />
         <TextInput
           style={[
@@ -83,6 +86,9 @@ export default function MisIngredientesScreen() {
           placeholderTextColor={placeholderColor}
           value={cantidad}
           onChangeText={setCantidad}
+          ref={cantidadInputRef}
+          returnKeyType="done"
+          onSubmitEditing={agregarIngrediente}
         />
         <TouchableOpacity onPress={agregarIngrediente}>
           <Text style={{ color: '#007AFF',  fontSize: 16 }}>Agregar</Text>

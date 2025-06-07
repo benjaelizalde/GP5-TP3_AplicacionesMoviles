@@ -4,7 +4,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, Modal, Pressable, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const THEME_OPTIONS = [
@@ -24,6 +24,8 @@ export default function SettingsScreen() {
   const [loading, setLoading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+  const newPasswordRef = useRef<TextInput>(null);
+  const repeatPasswordRef = useRef<TextInput>(null);
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -156,6 +158,8 @@ export default function SettingsScreen() {
               placeholder="Contraseña actual"
               placeholderTextColor="#888"
               secureTextEntry
+              returnKeyType="next"
+              onSubmitEditing={() => newPasswordRef.current?.focus()}
               value={currentPassword}
               onChangeText={setCurrentPassword}
             />
@@ -164,6 +168,9 @@ export default function SettingsScreen() {
               placeholder="Nueva contraseña"
               placeholderTextColor="#888"
               secureTextEntry
+              ref={newPasswordRef}
+              returnKeyType="next"
+              onSubmitEditing={() => repeatPasswordRef.current?.focus()}
               value={newPassword}
               onChangeText={setNewPassword}
             />
@@ -172,8 +179,11 @@ export default function SettingsScreen() {
               placeholder="Repetir nueva contraseña"
               placeholderTextColor="#888"
               secureTextEntry
+              ref={repeatPasswordRef}
+              returnKeyType="send"
               value={repeatPassword}
               onChangeText={setRepeatPassword}
+              onSubmitEditing={handleChangePassword}
             />
             <TouchableOpacity
               style={styles.filledBtn}
