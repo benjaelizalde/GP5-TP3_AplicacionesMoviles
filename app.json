@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "TP3",
-    "slug": "TP3",
+    "name": "TP3-GP5",
+    "slug": "TP3-GP5",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "tp3",
+    "scheme": "tp3-gp5",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

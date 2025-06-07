@@ -23,12 +23,6 @@ export default function RecipeDetail() {
   const navigation = useNavigation();
   const { theme } = useTheme();
 
-  navigation.setOptions({
-    headerShown: true,
-    headerStyle: {
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    },
-  });
 
   useEffect(() => {
     if (id) {
@@ -48,9 +42,15 @@ export default function RecipeDetail() {
             onToggle={() => toggleFavorite(recipeDetail)}
           />
         ),
+        headerShown: true,
+        headerTintColor: theme.text,
+        headerStyle: {
+          backgroundColor: theme.card,
+          paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+        },
       });
     }
-  }, [recipeDetail, favorites]);
+  }, [recipeDetail, favorites, theme, navigation]);
 
   if (loading) {
     return (

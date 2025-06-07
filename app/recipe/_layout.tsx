@@ -8,7 +8,7 @@ export default function RecipeLayout() {
       screenOptions={{
         headerStyle: { backgroundColor: theme.card },
         headerTintColor: theme.text,
-      }}
+      }} 
     />
   );
 }
