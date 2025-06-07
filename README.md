@@ -23,6 +23,7 @@ La app está pensada para personas que desean:
 - **@react-navigation/native** y dependencias: Navegación entre pantallas.
 - **@expo/vector-icons**: Iconografía.
 - **axios**: Cliente HTTP para consumir la API de recetas.
+- **react-native-toast-message**: Sistema de notificaciones emergentes para mostrar mensajes breves al usuario.
 
 ---
 

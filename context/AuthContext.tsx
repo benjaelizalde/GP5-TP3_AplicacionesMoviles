@@ -7,9 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Cargar usuario actual al iniciar
     supabase.auth.getUser().then(({ data }) => setUser(data?.user ?? null));
-    // Escuchar cambios de sesión
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });

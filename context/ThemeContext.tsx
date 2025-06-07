@@ -53,7 +53,6 @@ export const ThemeProvider = ({ children }) => {
   }, [userId]);
 
   useEffect(() => {
-    // Actualiza el modo real según la preferencia
     if (themePreference === 'system') {
       setMode(systemScheme === 'dark' ? 'dark' : 'light');
     } else {

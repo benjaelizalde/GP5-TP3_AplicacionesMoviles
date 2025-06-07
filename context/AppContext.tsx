@@ -8,7 +8,6 @@ export const AppProvider = ({ children }) => {
   const { user } = useAuth();
   const [favorites, setFavorites] = useState([]);
 
-  // Cargar favoritos del usuario al iniciar sesión
   useEffect(() => {
     const loadFavorites = async () => {
       if (user?.id) {
@@ -24,12 +23,10 @@ export const AppProvider = ({ children }) => {
     loadFavorites();
   }, [user]);
 
-  // Agregar o quitar favorito en Supabase
   const toggleFavorite = async (recipe) => {
     if (!user?.id) return;
     const exists = favorites.some((r) => r.idMeal === recipe.idMeal);
     if (exists) {
-      // Quitar de favoritos
       await supabase
         .from('favorites')
         .delete()
@@ -37,7 +34,6 @@ export const AppProvider = ({ children }) => {
         .eq('recipe_id', recipe.idMeal);
       setFavorites((prev) => prev.filter((r) => r.idMeal !== recipe.idMeal));
     } else {
-      // Agregar a favoritos
       await supabase
         .from('favorites')
         .insert([{ user_id: user.id, recipe_id: recipe.idMeal, recipe_data: recipe }]);
