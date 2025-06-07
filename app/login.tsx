@@ -189,6 +189,46 @@ export default function LoginScreen() {
     }
   };
 
+  // Manda mail pero como estamos en desarrollo y no va a salir a produccion no funciona el link ese
+  const handlePasswordReset = async () => {
+    if (!emailOrUsername || !emailOrUsername.includes("@")) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Ingresa tu email y presiona nuevamente.",
+      });
+      return;
+    }
+    const { error } = await supabase.auth.resetPasswordForEmail(
+      emailOrUsername
+    );
+    if (error) {
+      if (
+        error.message.includes(
+          "Unable to validate email address: invalid format"
+        )
+      ) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "El email ingresado no es válido",
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: error.message,
+        });
+      }
+    } else {
+      Toast.show({
+        type: "success",
+        text1: "Revisa tu correo",
+        text2: "Te enviamos un enlace para restablecer tu contraseña.",
+      });
+    }
+  };
+
   return (
     <View style={[styles.container, { backgroundColor }]}>
       {!isRegister && (
@@ -346,14 +386,7 @@ export default function LoginScreen() {
           )}
           <Text
             style={[styles.password, { color: isDark ? "#4fa3ff" : "#007AFF" }]}
-            onPress={() => {
-              Toast.show({
-                type: "info",
-                text1: "Recuperar contraseña",
-                text2:
-                  "Para recuperar tu contraseña, ingresa tu email en el login y presiona este enlace.",
-              });
-            }}
+            onPress={handlePasswordReset}
           >
             ¿Olvidaste tu contraseña?
           </Text>
