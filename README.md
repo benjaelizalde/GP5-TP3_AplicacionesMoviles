@@ -2,6 +2,8 @@
 
 Esta es una aplicación móvil desarrollada en React Native con Expo, orientada a la gestión de recetas de cocina y el manejo personalizado de ingredientes y favoritos. Permite a los usuarios buscar recetas, guardar sus favoritas, gestionar su lista de ingredientes y personalizar su cuenta y tema visual.
 
+**Las recetas se obtienen de la API pública de [TheMealDB](https://www.themealdb.com/). Por lo tanto, la búsqueda de recetas y el detalle de las mismas estarán principalmente en inglés.**
+
 ---
 
 ## Temática
