@@ -3,10 +3,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import {
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
   useColorScheme,
 } from "react-native";
@@ -230,203 +232,210 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor }]}>
-      {!isRegister && (
-        <View style={{ alignItems: "center", marginBottom: 24 }}>
-          <Ionicons
-            name="book-outline"
-            size={100}
-            color={isDark ? "#fff" : "#181818"}
-          />
-        </View>
-      )}
-      {isRegister && (
-        <Text style={[styles.title, { color: textColor }]}>Crear cuenta</Text>
-      )}
-      {isRegister ? (
-        <>
-          <TextInput
-            style={[
-              styles.input,
-              { backgroundColor: inputBg, color: textColor, borderColor },
-            ]}
-            placeholder="Nombre de usuario"
-            placeholderTextColor={placeholderColor}
-            autoCapitalize="none"
-            value={username}
-            onChangeText={(t) => {
-              setUsername(t);
-              setFieldErrors((prev) => {
-                const { username, ...rest } = prev;
-                return rest;
-              });
-            }}
-            returnKeyType="next"
-            onSubmitEditing={() => emailInputRef.current?.focus()}
-          />
-          {fieldErrors.username && (
-            <Text style={styles.errorText}>{fieldErrors.username}</Text>
-          )}
-          <TextInput
-            style={[
-              styles.input,
-              { backgroundColor: inputBg, color: textColor, borderColor },
-            ]}
-            placeholder="Email"
-            placeholderTextColor={placeholderColor}
-            autoCapitalize="none"
-            value={email}
-            onChangeText={(t) => {
-              setEmail(t);
-              setFieldErrors((prev) => {
-                const { email, ...rest } = prev;
-                return rest;
-              });
-            }}
-            ref={emailInputRef}
-            returnKeyType="next"
-            onSubmitEditing={() => passwordInputRef.current?.focus()}
-          />
-          {fieldErrors.email && (
-            <Text style={styles.errorText}>{fieldErrors.email}</Text>
-          )}
-          <TextInput
-            style={[
-              styles.input,
-              { backgroundColor: inputBg, color: textColor, borderColor },
-            ]}
-            placeholder="Contraseña"
-            placeholderTextColor={placeholderColor}
-            secureTextEntry
-            value={password}
-            onChangeText={(t) => {
-              setPassword(t);
-              setFieldErrors((prev) => {
-                const { password, ...rest } = prev;
-                return rest;
-              });
-            }}
-            ref={passwordInputRef}
-            returnKeyType="next"
-            onSubmitEditing={() => repeatPasswordInputRef.current?.focus()}
-          />
-          {fieldErrors.password && (
-            <Text style={styles.errorText}>{fieldErrors.password}</Text>
-          )}
-          <TextInput
-            style={[
-              styles.input,
-              { backgroundColor: inputBg, color: textColor, borderColor },
-            ]}
-            placeholder="Repetir contraseña"
-            placeholderTextColor={placeholderColor}
-            secureTextEntry
-            value={repeatPassword}
-            onChangeText={(t) => {
-              setRepeatPassword(t);
-              setFieldErrors((prev) => {
-                const { repeatPassword, ...rest } = prev;
-                return rest;
-              });
-            }}
-            ref={repeatPasswordInputRef}
-            returnKeyType="send"
-            onSubmitEditing={handleAuth}
-          />
-          {fieldErrors.repeatPassword && (
-            <Text style={styles.errorText}>{fieldErrors.repeatPassword}</Text>
-          )}
-        </>
-      ) : (
-        <>
-          <TextInput
-            style={[
-              styles.input,
-              { backgroundColor: inputBg, color: textColor, borderColor },
-            ]}
-            placeholder="Email o nombre de usuario"
-            placeholderTextColor={placeholderColor}
-            autoCapitalize="none"
-            value={emailOrUsername}
-            onChangeText={(t) => {
-              setEmailOrUsername(t);
-              setFieldErrors((prev) => {
-                const { emailOrUsername, ...rest } = prev;
-                return rest;
-              });
-            }}
-            returnKeyType="next"
-            onSubmitEditing={() => passwordInputRef.current?.focus()}
-          />
-          {fieldErrors.emailOrUsername && (
-            <Text style={styles.errorText}>{fieldErrors.emailOrUsername}</Text>
-          )}
-          <TextInput
-            style={[
-              styles.input,
-              { backgroundColor: inputBg, color: textColor, borderColor },
-            ]}
-            placeholder="Contraseña"
-            placeholderTextColor={placeholderColor}
-            secureTextEntry
-            value={password}
-            onChangeText={(t) => {
-              setPassword(t);
-              setFieldErrors((prev) => {
-                const { password, ...rest } = prev;
-                return rest;
-              });
-            }}
-            ref={passwordInputRef}
-            returnKeyType="done"
-            onSubmitEditing={handleAuth}
-          />
-          {fieldErrors.password && (
-            <Text style={styles.errorText}>{fieldErrors.password}</Text>
-          )}
-          <Text
-            style={[styles.password, { color: isDark ? "#4fa3ff" : "#007AFF" }]}
-            onPress={handlePasswordReset}
-          >
-            ¿Olvidaste tu contraseña?
-          </Text>
-        </>
-      )}
-      <TouchableOpacity
-        onPress={handleAuth}
-        activeOpacity={0.7}
-        style={{
-          paddingVertical: 12,
-          alignItems: "center",
-          borderColor: textColor,
-          borderWidth: 1,
-          borderRadius: 8,
-          marginBottom: 8,
-          marginTop: 8,
-        }}
-      >
-        <Text
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={[styles.container, { backgroundColor }]}>
+        {!isRegister && (
+          <View style={{ alignItems: "center", marginBottom: 24 }}>
+            <Ionicons
+              name="book-outline"
+              size={100}
+              color={isDark ? "#fff" : "#181818"}
+            />
+          </View>
+        )}
+        {isRegister && (
+          <Text style={[styles.title, { color: textColor }]}>Crear cuenta</Text>
+        )}
+        {isRegister ? (
+          <>
+            <TextInput
+              style={[
+                styles.input,
+                { backgroundColor: inputBg, color: textColor, borderColor },
+              ]}
+              placeholder="Nombre de usuario"
+              placeholderTextColor={placeholderColor}
+              autoCapitalize="none"
+              value={username}
+              onChangeText={(t) => {
+                setUsername(t);
+                setFieldErrors((prev) => {
+                  const { username, ...rest } = prev;
+                  return rest;
+                });
+              }}
+              returnKeyType="next"
+              onSubmitEditing={() => emailInputRef.current?.focus()}
+            />
+            {fieldErrors.username && (
+              <Text style={styles.errorText}>{fieldErrors.username}</Text>
+            )}
+            <TextInput
+              style={[
+                styles.input,
+                { backgroundColor: inputBg, color: textColor, borderColor },
+              ]}
+              placeholder="Email"
+              placeholderTextColor={placeholderColor}
+              autoCapitalize="none"
+              value={email}
+              onChangeText={(t) => {
+                setEmail(t);
+                setFieldErrors((prev) => {
+                  const { email, ...rest } = prev;
+                  return rest;
+                });
+              }}
+              ref={emailInputRef}
+              returnKeyType="next"
+              onSubmitEditing={() => passwordInputRef.current?.focus()}
+            />
+            {fieldErrors.email && (
+              <Text style={styles.errorText}>{fieldErrors.email}</Text>
+            )}
+            <TextInput
+              style={[
+                styles.input,
+                { backgroundColor: inputBg, color: textColor, borderColor },
+              ]}
+              placeholder="Contraseña"
+              placeholderTextColor={placeholderColor}
+              secureTextEntry
+              value={password}
+              onChangeText={(t) => {
+                setPassword(t);
+                setFieldErrors((prev) => {
+                  const { password, ...rest } = prev;
+                  return rest;
+                });
+              }}
+              ref={passwordInputRef}
+              returnKeyType="next"
+              onSubmitEditing={() => repeatPasswordInputRef.current?.focus()}
+            />
+            {fieldErrors.password && (
+              <Text style={styles.errorText}>{fieldErrors.password}</Text>
+            )}
+            <TextInput
+              style={[
+                styles.input,
+                { backgroundColor: inputBg, color: textColor, borderColor },
+              ]}
+              placeholder="Repetir contraseña"
+              placeholderTextColor={placeholderColor}
+              secureTextEntry
+              value={repeatPassword}
+              onChangeText={(t) => {
+                setRepeatPassword(t);
+                setFieldErrors((prev) => {
+                  const { repeatPassword, ...rest } = prev;
+                  return rest;
+                });
+              }}
+              ref={repeatPasswordInputRef}
+              returnKeyType="send"
+              onSubmitEditing={handleAuth}
+            />
+            {fieldErrors.repeatPassword && (
+              <Text style={styles.errorText}>{fieldErrors.repeatPassword}</Text>
+            )}
+          </>
+        ) : (
+          <>
+            <TextInput
+              style={[
+                styles.input,
+                { backgroundColor: inputBg, color: textColor, borderColor },
+              ]}
+              placeholder="Email o nombre de usuario"
+              placeholderTextColor={placeholderColor}
+              autoCapitalize="none"
+              value={emailOrUsername}
+              onChangeText={(t) => {
+                setEmailOrUsername(t);
+                setFieldErrors((prev) => {
+                  const { emailOrUsername, ...rest } = prev;
+                  return rest;
+                });
+              }}
+              returnKeyType="next"
+              onSubmitEditing={() => passwordInputRef.current?.focus()}
+            />
+            {fieldErrors.emailOrUsername && (
+              <Text style={styles.errorText}>
+                {fieldErrors.emailOrUsername}
+              </Text>
+            )}
+            <TextInput
+              style={[
+                styles.input,
+                { backgroundColor: inputBg, color: textColor, borderColor },
+              ]}
+              placeholder="Contraseña"
+              placeholderTextColor={placeholderColor}
+              secureTextEntry
+              value={password}
+              onChangeText={(t) => {
+                setPassword(t);
+                setFieldErrors((prev) => {
+                  const { password, ...rest } = prev;
+                  return rest;
+                });
+              }}
+              ref={passwordInputRef}
+              returnKeyType="done"
+              onSubmitEditing={handleAuth}
+            />
+            {fieldErrors.password && (
+              <Text style={styles.errorText}>{fieldErrors.password}</Text>
+            )}
+            <Text
+              style={[
+                styles.password,
+                { color: isDark ? "#4fa3ff" : "#007AFF" },
+              ]}
+              onPress={handlePasswordReset}
+            >
+              ¿Olvidaste tu contraseña?
+            </Text>
+          </>
+        )}
+        <TouchableOpacity
+          onPress={handleAuth}
+          activeOpacity={0.7}
           style={{
-            color: textColor,
-            fontSize: 16,
+            paddingVertical: 12,
+            alignItems: "center",
+            borderColor: textColor,
+            borderWidth: 1,
+            borderRadius: 8,
+            marginBottom: 8,
+            marginTop: 8,
           }}
         >
-          {isRegister ? "Registrarse" : "Iniciar sesión"}
+          <Text
+            style={{
+              color: textColor,
+              fontSize: 16,
+            }}
+          >
+            {isRegister ? "Registrarse" : "Iniciar sesión"}
+          </Text>
+        </TouchableOpacity>
+        <Text
+          style={[styles.link, { color: isDark ? "#4fa3ff" : "#007AFF" }]}
+          onPress={() => {
+            setIsRegister((prev) => !prev);
+            clearFields();
+          }}
+        >
+          {isRegister
+            ? "¿Ya tenés cuenta? Inicia sesión"
+            : "¿No tenés cuenta? Regístrate"}
         </Text>
-      </TouchableOpacity>
-      <Text
-        style={[styles.link, { color: isDark ? "#4fa3ff" : "#007AFF" }]}
-        onPress={() => {
-          setIsRegister((prev) => !prev);
-          clearFields();
-        }}
-      >
-        {isRegister
-          ? "¿Ya tenés cuenta? Inicia sesión"
-          : "¿No tenés cuenta? Regístrate"}
-      </Text>
-      <Toast position="bottom" bottomOffset={50} />
-    </View>
+        <Toast position="bottom" bottomOffset={50} />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 

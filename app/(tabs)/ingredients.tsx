@@ -2,6 +2,7 @@ import IngredientItem from '@/components/IngredientItem';
 import { supabase } from '@/constants/supabaseClient';
 import { useAuth } from '@/context/AuthContext';
 import { useTheme } from '@/context/ThemeContext';
+import { useScrollToTop } from '@react-navigation/native';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, FlatList, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -13,6 +14,8 @@ export default function MisIngredientesScreen() {
   const { user } = useAuth();
   const placeholderColor = mode === 'dark' ? '#bbb' : '#888';
   const cantidadInputRef = useRef<TextInput>(null);
+  const flatListRef = useRef(null);
+  useScrollToTop(flatListRef);
 
   useEffect(() => {
     cargarIngredientes();
@@ -96,6 +99,7 @@ export default function MisIngredientesScreen() {
       </View>
 
       <FlatList
+        ref={flatListRef}
         data={ingredientes}
         keyExtractor={(_, idx) => idx.toString()}
         renderItem={({ item, index }) => (

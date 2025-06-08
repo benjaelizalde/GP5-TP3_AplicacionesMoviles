@@ -1,8 +1,9 @@
 import RecipeCard from '@/components/RecipeCard';
 import { useTheme } from '@/context/ThemeContext';
 import { useRecipes } from '@/hooks/useRecipes';
+import { useScrollToTop } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -18,6 +19,8 @@ export default function HomeScreen() {
   const { recipes, loading, searchRecipes } = useRecipes();
   const router = useRouter();
   const { theme, mode } = useTheme();
+  const flatListRef = useRef(null);
+  useScrollToTop(flatListRef);
 
   const placeholderColor = mode === 'dark' ? '#bbb' : '#888';
 
@@ -45,6 +48,7 @@ export default function HomeScreen() {
         <ActivityIndicator size="large" style={{ marginTop: 20 }} color={theme.text} />
       ) : (
         <FlatList
+          ref={flatListRef}
           data={recipes}
           keyExtractor={(item) => item.idMeal}
           renderItem={({ item }) => (
