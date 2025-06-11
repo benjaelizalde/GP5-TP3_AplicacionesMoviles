@@ -108,7 +108,6 @@ export default function RecipeListWithFilters({
   const flatListRef = useRef(null);
   useScrollToTop(flatListRef);
 
-  // Estados para filtros
   const [categories, setCategories] = useState<string[]>([]);
   const [areas, setAreas] = useState<string[]>([]);
   const [ingredients, setIngredients] = useState<string[]>([]);
@@ -170,7 +169,7 @@ export default function RecipeListWithFilters({
           </Pressable>
           <Modal
             visible={modalVisible}
-            animationType="slide"
+            animationType="fade"
             transparent
             onRequestClose={() => {
               setModalVisible(false);
@@ -279,26 +278,11 @@ export default function RecipeListWithFilters({
                           }}
                           onPress={handleClearFilters}
                         >
-                          <Text style={{ color: theme.text, fontSize: 18 }}>
+                          <Text style={{ color: "grey", fontSize: 18 }}>
                           Limpiar
                           </Text>
                         </Pressable>
                       </View>
-                      <Pressable
-                          style={{
-                          flex: 1,
-                          alignItems: "center",
-                          justifyContent: "center",
-                          }}
-                          onPress={() => {
-                            setModalVisible(false);
-                            setOpenInput("");
-                          }}
-                        >
-                          <Text style={{ color: "red", fontSize: 18 }}>
-                          Cerrar
-                          </Text>
-                      </Pressable>
                     </View>
                   </TouchableWithoutFeedback>
                 </ScrollView>

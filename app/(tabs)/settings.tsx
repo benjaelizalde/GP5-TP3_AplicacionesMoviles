@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
+  Keyboard,
   Modal,
   Pressable,
   SafeAreaView,
@@ -13,6 +14,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import Toast from "react-native-toast-message";
@@ -39,6 +41,7 @@ export default function SettingsScreen() {
   );
   const newPasswordRef = useRef<TextInput>(null);
   const repeatPasswordRef = useRef<TextInput>(null);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -67,6 +70,19 @@ export default function SettingsScreen() {
     setRepeatPassword("");
     setPwFieldErrors({});
   };
+
+  useEffect(() => {
+    const showSub = Keyboard.addListener("keyboardDidShow", () =>
+      setKeyboardOpen(true)
+    );
+    const hideSub = Keyboard.addListener("keyboardDidHide", () =>
+      setKeyboardOpen(false)
+    );
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
   const handleChangePassword = async () => {
     let errors: { [key: string]: string } = {};
@@ -225,101 +241,114 @@ export default function SettingsScreen() {
         animationType="fade"
         onRequestClose={handleClosePwModal}
       >
-        <Pressable style={styles.modalOverlay} onPress={handleClosePwModal}>
-          <View style={[styles.modalBox, { backgroundColor: theme.card }]}>
-            <Text
-              style={{
-                color: theme.text,
-                fontWeight: "bold",
-                fontSize: 18,
-                marginBottom: 12,
-                textAlign: "center",
-              }}
-            >
-              Cambiar contraseña
-            </Text>
-            <TextInput
-              style={[
-                styles.input,
-                { color: theme.text, borderColor: theme.text },
-              ]}
-              placeholder="Contraseña actual"
-              placeholderTextColor="#888"
-              secureTextEntry
-              returnKeyType="next"
-              onSubmitEditing={() => newPasswordRef.current?.focus()}
-              value={currentPassword}
-              onChangeText={(t) => {
-                setCurrentPassword(t);
-                setPwFieldErrors((prev) => {
-                  const { currentPassword, ...rest } = prev;
-                  return rest;
-                });
-              }}
-            />
-            {pwFieldErrors.currentPassword && (
-              <Text style={styles.errorText}>
-                {pwFieldErrors.currentPassword}
+        <Pressable
+          style={styles.modalOverlay}
+          onPress={() => {
+            if (keyboardOpen) {
+              Keyboard.dismiss();
+            } else {
+              handleClosePwModal();
+            }
+          }}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={[styles.modalBox, { backgroundColor: theme.card }]}>
+              <Text
+                style={{
+                  color: theme.text,
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  marginBottom: 12,
+                  textAlign: "center",
+                }}
+              >
+                Cambiar contraseña
               </Text>
-            )}
-            <TextInput
-              style={[
-                styles.input,
-                { color: theme.text, borderColor: theme.text },
-              ]}
-              placeholder="Nueva contraseña"
-              placeholderTextColor="#888"
-              secureTextEntry
-              ref={newPasswordRef}
-              returnKeyType="next"
-              onSubmitEditing={() => repeatPasswordRef.current?.focus()}
-              value={newPassword}
-              onChangeText={(t) => {
-                setNewPassword(t);
-                setPwFieldErrors((prev) => {
-                  const { newPassword, ...rest } = prev;
-                  return rest;
-                });
-              }}
-            />
-            {pwFieldErrors.newPassword && (
-              <Text style={styles.errorText}>{pwFieldErrors.newPassword}</Text>
-            )}
-            <TextInput
-              style={[
-                styles.input,
-                { color: theme.text, borderColor: theme.text },
-              ]}
-              placeholder="Repetir nueva contraseña"
-              placeholderTextColor="#888"
-              secureTextEntry
-              ref={repeatPasswordRef}
-              returnKeyType="send"
-              value={repeatPassword}
-              onChangeText={(t) => {
-                setRepeatPassword(t);
-                setPwFieldErrors((prev) => {
-                  const { repeatPassword, ...rest } = prev;
-                  return rest;
-                });
-              }}
-              onSubmitEditing={handleChangePassword}
-            />
-            {pwFieldErrors.repeatPassword && (
-              <Text style={styles.errorText}>
-                {pwFieldErrors.repeatPassword}
-              </Text>
-            )}
-            <TouchableOpacity
-              style={styles.filledBtn}
-              onPress={handleChangePassword}
-              disabled={loading}
-            >
-              <Text style={{ color: theme.text, fontSize: 16 }}>
-                {loading ? "Cambiando..." : "Confirmar"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+              <TextInput
+                style={[
+                  styles.input,
+                  { color: theme.text, borderColor: theme.text },
+                ]}
+                placeholder="Contraseña actual"
+                placeholderTextColor="#888"
+                secureTextEntry
+                returnKeyType="next"
+                onSubmitEditing={() => newPasswordRef.current?.focus()}
+                value={currentPassword}
+                onChangeText={(t) => {
+                  setCurrentPassword(t);
+                  setPwFieldErrors((prev) => {
+                    const { currentPassword, ...rest } = prev;
+                    return rest;
+                  });
+                }}
+              />
+              {pwFieldErrors.currentPassword && (
+                <Text style={styles.errorText}>
+                  {pwFieldErrors.currentPassword}
+                </Text>
+              )}
+              <TextInput
+                style={[
+                  styles.input,
+                  { color: theme.text, borderColor: theme.text },
+                ]}
+                placeholder="Nueva contraseña"
+                placeholderTextColor="#888"
+                secureTextEntry
+                ref={newPasswordRef}
+                returnKeyType="next"
+                onSubmitEditing={() => repeatPasswordRef.current?.focus()}
+                value={newPassword}
+                onChangeText={(t) => {
+                  setNewPassword(t);
+                  setPwFieldErrors((prev) => {
+                    const { newPassword, ...rest } = prev;
+                    return rest;
+                  });
+                }}
+              />
+              {pwFieldErrors.newPassword && (
+                <Text style={styles.errorText}>
+                  {pwFieldErrors.newPassword}
+                </Text>
+              )}
+              <TextInput
+                style={[
+                  styles.input,
+                  { color: theme.text, borderColor: theme.text },
+                ]}
+                placeholder="Repetir nueva contraseña"
+                placeholderTextColor="#888"
+                secureTextEntry
+                ref={repeatPasswordRef}
+                returnKeyType="send"
+                value={repeatPassword}
+                onChangeText={(t) => {
+                  setRepeatPassword(t);
+                  setPwFieldErrors((prev) => {
+                    const { repeatPassword, ...rest } = prev;
+                    return rest;
+                  });
+                }}
+                onSubmitEditing={handleChangePassword}
+              />
+              {pwFieldErrors.repeatPassword && (
+                <Text style={styles.errorText}>
+                  {pwFieldErrors.repeatPassword}
+                </Text>
+              )}
+              <TouchableOpacity
+                style={styles.filledBtn}
+                onPress={handleChangePassword}
+                disabled={loading}
+              >
+                <Text style={{ color: theme.text, fontSize: 16 }}>
+                  {loading ? "Cambiando..." : "Confirmar"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableWithoutFeedback>
         </Pressable>
       </Modal>
 
