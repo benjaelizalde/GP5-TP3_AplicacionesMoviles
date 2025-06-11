@@ -35,11 +35,62 @@ export function useRecipes() {
     }
   };
 
+  const fetchCategories = async () => {
+    const res = await axios.get(`${BASE_URL}/list.php?c=list`);
+    return res.data.meals?.map((c: any) => c.strCategory) || [];
+  };
+
+  const fetchAreas = async () => {
+    const res = await axios.get(`${BASE_URL}/list.php?a=list`);
+    return res.data.meals?.map((a: any) => a.strArea) || [];
+  };
+
+  const fetchIngredients = async () => {
+    const res = await axios.get(`${BASE_URL}/list.php?i=list`);
+    return res.data.meals?.map((i: any) => i.strIngredient) || [];
+  };
+
+  const filterByCategory = async (category: string) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${BASE_URL}/filter.php?c=${category}`);
+      setRecipes(res.data.meals || []);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterByArea = async (area: string) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${BASE_URL}/filter.php?a=${area}`);
+      setRecipes(res.data.meals || []);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterByIngredient = async (ingredient: string) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${BASE_URL}/filter.php?i=${ingredient}`);
+      setRecipes(res.data.meals || []);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     recipes,
     recipeDetail,
     loading,
     searchRecipes,
     fetchRecipeDetail,
+    fetchCategories,
+    fetchAreas,
+    fetchIngredients,
+    filterByCategory,
+    filterByArea,
+    filterByIngredient,
   };
 }

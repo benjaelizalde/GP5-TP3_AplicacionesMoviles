@@ -9,7 +9,7 @@ Esta es una aplicación móvil desarrollada en React Native con Expo, orientada 
 ## Temática
 
 La app está pensada para personas que desean:
-- Buscar recetas de cocina por nombre o ingrediente.
+- Buscar recetas de cocina.
 - Guardar recetas favoritas para acceder rápidamente.
 - Llevar un control de los ingredientes que tienen en casa.
 - Administrar su cuenta y preferencias de tema (claro/oscuro/sistema).
@@ -26,6 +26,14 @@ La app está pensada para personas que desean:
 - **@expo/vector-icons**: Iconografía.
 - **axios**: Cliente HTTP para consumir la API de recetas.
 - **react-native-toast-message**: Sistema de notificaciones emergentes para mostrar mensajes breves al usuario.
+
+---
+
+## Búsqueda y filtrado avanzado
+
+La app permite buscar recetas por nombre o ingrediente desde la pantalla principal. Además, cuenta con un buscador avanzado que permite filtrar recetas por Categoria, Área o Ingrediente principal.
+
+Esto facilita encontrar recetas específicas según tus preferencias o lo que tengas disponible en casa.
 
 ---
 

@@ -1,28 +1,35 @@
-import RecipeCard from '@/components/RecipeCard';
-import { useTheme } from '@/context/ThemeContext';
-import { useRecipes } from '@/hooks/useRecipes';
-import { useScrollToTop } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
+import RecipeListWithFilters from "@/components/RecipeListWithFilters";
+import { useTheme } from "@/context/ThemeContext";
+import { useRecipes } from "@/hooks/useRecipes";
+import { useScrollToTop } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import { useRef, useState } from "react";
 import {
-  ActivityIndicator,
-  FlatList,
   Keyboard,
   SafeAreaView,
   StyleSheet,
-  Text,
-  TextInput,
-} from 'react-native';
+  TextInput
+} from "react-native";
 
 export default function HomeScreen() {
-  const [query, setQuery] = useState('');
-  const { recipes, loading, searchRecipes } = useRecipes();
+  const [query, setQuery] = useState("");
+  const {
+    recipes,
+    loading,
+    fetchCategories,
+    fetchAreas,
+    fetchIngredients,
+    filterByCategory,
+    filterByArea,
+    filterByIngredient,
+    searchRecipes,
+  } = useRecipes();
   const router = useRouter();
   const { theme, mode } = useTheme();
   const flatListRef = useRef(null);
   useScrollToTop(flatListRef);
 
-  const placeholderColor = mode === 'dark' ? '#bbb' : '#888';
+  const placeholderColor = mode === "dark" ? "#bbb" : "#888";
 
   const handleSearch = () => {
     Keyboard.dismiss();
@@ -30,40 +37,42 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: theme.background }]}
+    >
       <TextInput
         placeholder="Buscar receta o ingrediente..."
         placeholderTextColor={placeholderColor}
         value={query}
         onChangeText={setQuery}
         onSubmitEditing={handleSearch}
-        returnKeyType='search'
+        returnKeyType="search"
         style={[
           styles.input,
-          { backgroundColor: theme.card, color: theme.text, borderColor: theme.text + '33' },
+          {
+            backgroundColor: theme.card,
+            color: theme.text,
+            borderColor: theme.text + "33",
+          },
         ]}
       />
-
-      {loading ? (
-        <ActivityIndicator size="large" style={{ marginTop: 20 }} color={theme.text} />
-      ) : (
-        <FlatList
-          ref={flatListRef}
-          data={recipes}
-          keyExtractor={(item) => item.idMeal}
-          renderItem={({ item }) => (
-            <RecipeCard
-              recipe={item}
-              onPress={() => router.push(`/recipe/${item.idMeal}`)}
-            />
-          )}
-          ListEmptyComponent={
-            recipes.length === 0 && query !== '' && !loading ? (
-              <Text style={[styles.emptyText, { color: theme.text }]}>No se encontraron recetas.</Text>
-            ) : null
-          }
-        />
-      )}
+      <RecipeListWithFilters
+        recipes={recipes}
+        loading={loading}
+        onRecipePress={(item) => router.push(`/recipe/${item.idMeal}`)}
+        fetchCategories={fetchCategories}
+        fetchAreas={fetchAreas}
+        fetchIngredients={fetchIngredients}
+        filterByCategory={filterByCategory}
+        filterByArea={filterByArea}
+        filterByIngredient={filterByIngredient}
+        searchRecipes={searchRecipes}
+        showFilters={true}
+        emptyText={query ? "No se encontraron recetas." : ""}
+        theme={theme}
+        clearQuery={() => setQuery("")}
+        query={query}
+      />
     </SafeAreaView>
   );
 }
@@ -83,7 +92,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     marginTop: 40,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
   },
 });
